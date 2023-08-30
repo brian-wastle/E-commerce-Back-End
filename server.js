@@ -16,9 +16,3 @@ sequelize.sync({ force: false }).then(() => {
     console.log(`App listening on port ${PORT}!`);
   });
 });
-
-//models to seed db -- donezo
-
-//then 'get' routes
-
-//then the other routes
