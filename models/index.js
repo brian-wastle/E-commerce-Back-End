@@ -9,7 +9,7 @@ const ProductTag = require('./ProductTag');
 
 Category.hasMany(Product, {
   foreignKey: 'category_id',
-  // onDelete: 'CASCADE',
+  onDelete: 'CASCADE',
 });
 
 // Products belongsTo Category
@@ -20,11 +20,11 @@ Product.belongsTo(Category, {
 
 // Products belongToMany Tags (through ProductTag)
 
-Product.belongsToMany(Tag, { foreignKey: 'product_id', through: ProductTag });
+Product.belongsToMany(Tag, { foreignKey: 'product_id', through: ProductTag, unique: false });
 
 // Tags belongToMany Products (through ProductTag)
 
-Tag.belongsToMany(Product, { foreignKey: 'tag_id', through: ProductTag });
+Tag.belongsToMany(Product, { foreignKey: 'tag_id', through: ProductTag, unique: false });
 
 module.exports = {
   Product,

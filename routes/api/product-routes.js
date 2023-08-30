@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
+const { Op } = require("sequelize");
 
 // The `/api/products` endpoint
 
@@ -86,7 +87,6 @@ router.put('/:id', async (req, res) => {
   })
     .then((product) => {
       if (req.body.tagIds && req.body.tagIds.length) {
-        
         ProductTag.findAll({
           where: { product_id: req.params.id }
         }).then((productTags) => {
@@ -104,10 +104,11 @@ router.put('/:id', async (req, res) => {
             // figure out which ones to remove
           const productTagsToRemove = productTags
           .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
-          .map(({ id }) => id);
+          .map(({ product_id }) => product_id);
                   // run both actions
           return Promise.all([
-            ProductTag.destroy({ where: { id: productTagsToRemove } }),
+            
+            ProductTag.destroy({ where: { product_id: productTagsToRemove, tag_id: { [Op.ne]: req.body.tagIds} } }),
             ProductTag.bulkCreate(newProductTags),
           ]);
         });
@@ -116,7 +117,6 @@ router.put('/:id', async (req, res) => {
       return res.json(product);
     })
     .catch((err) => {
-      // console.log(err);
       res.status(400).json(err);
     });
 });
@@ -142,3 +142,4 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
+
