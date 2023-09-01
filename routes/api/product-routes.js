@@ -108,7 +108,7 @@ router.put('/:id', async (req, res) => {
                   // run both actions
           return Promise.all([
             
-            ProductTag.destroy({ where: { product_id: productTagsToRemove, tag_id: { [Op.ne]: req.body.tagIds} } }),
+            ProductTag.destroy({ where: { product_id: productTagsToRemove, tag_id: { [Op.notIn]: req.body.tagIds} } }),
             ProductTag.bulkCreate(newProductTags),
           ]);
         });
